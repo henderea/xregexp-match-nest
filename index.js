@@ -109,7 +109,11 @@ module.exports = (XRegExp) => {
         const matcher = (string, mainName) => {
             let queue = {};
             let base = [];
-            XRegExp.forEach(string, XRegExp(nestPatterns[mainName]), mergeMatch(queue, base));
+            let mainPattern = nestPatterns[mainName];
+            if(__.isFunction(mainPattern)) {
+                mainPattern = mainPattern({ objects: null, keyChain: null });
+            }
+            XRegExp.forEach(string, XRegExp(mainPattern), mergeMatch(queue, base));
             while(__.size(queue) > 0) {
                 let newQueue = {};
                 __.each(queue, (queueValue, queueKey) => {
