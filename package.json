@@ -1,0 +1,12 @@
+{
+  "name": "@henderea/xregexp-match-nest",
+  "version": "1.0.0",
+  "description": "Adds a matchNest method to XRegExp",
+  "main": "index.js",
+  "repository": "git@github.com:henderea/xregexp-match-nest.git",
+  "author": "Eric Henderson <henderea@gmail.com>",
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ]
+}
