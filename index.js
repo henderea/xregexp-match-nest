@@ -97,27 +97,45 @@ module.exports = (XRegExp) => {
         return { paramArrays, keyChain };
     }
     XRegExp.matchNest = (string, mainName, nestPatterns) => {
-        let queue = {};
-        let base = [];
-        XRegExp.forEach(string, XRegExp(nestPatterns[mainName]), mergeMatch(queue, base));
-        while(__.size(queue) > 0) {
-            let newQueue = {};
-            __.each(queue, (queueValue, queueKey) => {
-                __.each(queueValue, queueEntry => {
-                    let pattern = nestPatterns[queueKey];
-                    if(pattern && __.isFunction(pattern)) {
-                        let { paramArrays, keyChain } = backChain(queueEntry, mainName);
-                        pattern = pattern({ objects: __.map(paramArrays, reduce), keyChain });
-                    }
-                    if(pattern) {
-                        let values = [];
-                        XRegExp.forEach(queueEntry.value, XRegExp(pattern), mergeMatch(newQueue, values, queueEntry));
-                        queueEntry.value = values;
-                    }
-                });
-            });
-            queue = newQueue;
+        if(__.isNil(mainName) && __.isNil(nestPatterns) && __.isObject(string)) {
+            nestPatterns = string;
+            mainName = undefined;
+            string = undefined;
+        } else if(__.isNil(nestPatterns) && __.isObject(mainName)) {
+            nestPatterns = mainName;
+            mainName = string;
+            string = undefined;
         }
-        return reduce(base);
+        const matcher = (string, mainName) => {
+            let queue = {};
+            let base = [];
+            XRegExp.forEach(string, XRegExp(nestPatterns[mainName]), mergeMatch(queue, base));
+            while(__.size(queue) > 0) {
+                let newQueue = {};
+                __.each(queue, (queueValue, queueKey) => {
+                    __.each(queueValue, queueEntry => {
+                        let pattern = nestPatterns[queueKey];
+                        if(pattern && __.isFunction(pattern)) {
+                            let { paramArrays, keyChain } = backChain(queueEntry, mainName);
+                            pattern = pattern({ objects: __.map(paramArrays, reduce), keyChain });
+                        }
+                        if(pattern) {
+                            let values = [];
+                            XRegExp.forEach(queueEntry.value, XRegExp(pattern), mergeMatch(newQueue, values, queueEntry));
+                            queueEntry.value = values;
+                        }
+                    });
+                });
+                queue = newQueue;
+            }
+            return reduce(base);
+        };
+        if(mainName === undefined && string === undefined) {
+            return matcher;
+        } else if(string === undefined) {
+            return (string) => matcher(string, mainName);
+        } else {
+            return matcher(string, mainName);
+        }
     }
 };
