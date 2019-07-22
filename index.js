@@ -121,7 +121,7 @@ module.exports = (XRegExp) => {
                         let pattern = nestPatterns[queueKey];
                         if(pattern && __.isFunction(pattern)) {
                             let { paramArrays, keyChain } = backChain(queueEntry, mainName);
-                            pattern = pattern({ objects: __.map(paramArrays, reduce), keyChain });
+                            pattern = pattern({ objects: __.map(paramArrays, reduce), keyChain, value: queueEntry.value });
                         }
                         if(pattern) {
                             let values = [];
