@@ -91,8 +91,9 @@ module.exports = (XRegExp) => {
     function reduce(array) {
         return simplify(__.map(array, value => {
             let rv = __.mapValues(value, entry => __.isArray(entry.value) ? reduce(entry.value) : entry.value);
-            if(__.arrayEquals(Object.keys(rv), ['__'])) {
-                rv = rv['__'];
+            let keys = Object.keys(rv);
+            if(keys.length == 1 && /^__.*$/.test(keys[0])) {
+                rv = rv[keys[0]];
             }
             return rv;
         }));
