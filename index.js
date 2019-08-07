@@ -62,6 +62,16 @@ module.exports = (XRegExp) => {
                 })
             });
             return object;
+        },
+        arrayEquals(array, other) {
+            if(!__.isArray(array) || !__.isArray(other) || array.length != other.length) { return false; }
+            if(array === other) { return true; }
+            for(let i = 0; i < array.length; i++) {
+                if(array[i] != other[i]) {
+                    return false;
+                }
+            }
+            return true;
         }
     };
     function cleanMatch(match) {
@@ -79,7 +89,13 @@ module.exports = (XRegExp) => {
         return array.length == 1 ? array[0] : array;
     }
     function reduce(array) {
-        return simplify(__.map(array, value => __.mapValues(value, entry => __.isArray(entry.value) ? reduce(entry.value) : entry.value)));
+        return simplify(__.map(array, value => {
+            let rv = __.mapValues(value, entry => __.isArray(entry.value) ? reduce(entry.value) : entry.value);
+            if(__.arrayEquals(Object.keys(rv), ['__'])) {
+                rv = rv['__'];
+            }
+            return rv;
+        }));
     }
     function backChain(entry, mainName) {
         let currentKey = entry.key;
