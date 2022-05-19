@@ -8,5 +8,8 @@
   "license": "MIT",
   "files": [
     "index.js"
-  ]
+  ],
+  "peerDependencies": {
+      "xregexp": ">= 5"
+  }
 }

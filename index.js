@@ -79,7 +79,7 @@ module.exports = (XRegExp) => {
     }
     function mergeMatch(queue, values, parent = null) {
         return (match) => {
-            match = __.mapValues(cleanMatch(match), (value, key) => ({ value, key, parent, self: null }));
+            match = __.mapValues(cleanMatch(match.groups), (value, key) => ({ value, key, parent, self: null }));
             __.each(__.values(match), value => value.self = match);
             values.push(match);
             __.mergeWith(queue, match, (queueValue, matchValue) => (queueValue || []).concat(matchValue));
