@@ -1,6 +1,6 @@
 {
   "name": "@henderea/xregexp-match-nest",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "Adds a matchNest method to XRegExp",
   "main": "index.js",
   "repository": "git@github.com:henderea/xregexp-match-nest.git",
@@ -10,6 +10,6 @@
     "index.js"
   ],
   "peerDependencies": {
-      "xregexp": ">= 5"
+    "xregexp": ">= 5"
   }
 }
